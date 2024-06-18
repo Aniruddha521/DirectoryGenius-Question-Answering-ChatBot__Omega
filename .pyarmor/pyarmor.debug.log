@@ -1,0 +1,29 @@
+2024-06-14 13:55:43,548 Python 3.11.9
+2024-06-14 13:55:43,548 Pyarmor 8.5.9 (trial), 000000, non-profits
+2024-06-14 13:55:43,549 Platform linux.x86_64
+2024-06-14 13:55:43,549 native platform linux.x86_64
+2024-06-14 13:55:43,549 home path: /home/roy/.pyarmor
+2024-06-14 13:55:43,549 command options: {'no_runtime': False, 'inputs': ['decode.py']}
+2024-06-14 13:55:43,549 install plugin: CodesignPlugin
+2024-06-14 13:55:43,549 install plugin: DarwinUniversalPlugin
+2024-06-14 13:55:43,549 search inputs ...
+2024-06-14 13:55:43,549 find script decode.py
+2024-06-14 13:55:43,549 find 1 top resources
+2024-06-14 13:55:43,574 start to generate runtime files
+2024-06-14 13:55:43,574 target platforms {'linux.x86_64'}
+2024-06-14 13:55:43,574 got /home/roy/miniconda3/envs/PyTorch_env/lib/python3.11/site-packages/pyarmor/cli/core/pyarmor_runtime.so
+2024-06-14 13:55:43,574 write dist/pyarmor_runtime_000000/pyarmor_runtime.so
+2024-06-14 13:55:43,574 patching runtime data at 764256
+2024-06-14 13:55:43,575 patch runtime file OK
+2024-06-14 13:55:43,575 call post runtime plugin <class 'pyarmor.cli.plugin.CodesignPlugin'>
+2024-06-14 13:55:43,575 generate runtime files OK
+2024-06-14 13:55:43,575 start to obfuscate scripts
+2024-06-14 13:55:43,575 process resource "decode"
+2024-06-14 13:55:43,575 obfuscating file decode.py
+2024-06-14 13:55:43,575 process inline marker
+2024-06-14 13:55:43,575 parse script
+2024-06-14 13:55:43,576 process co
+2024-06-14 13:55:43,577 patch co
+2024-06-14 13:55:43,579 write dist/decode.py
+2024-06-14 13:55:43,579 obfuscate scripts OK
+2024-06-14 13:55:43,580 call post build plugin <class 'pyarmor.cli.plugin.DarwinUniversalPlugin'>
