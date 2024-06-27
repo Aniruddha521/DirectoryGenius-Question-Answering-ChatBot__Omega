@@ -54,10 +54,8 @@ model2 = ChatGroq( model_name="Llama3-70b-8192")#Mixtral-8x7b-32768
 if 'conversation' not in st.session_state:
     st.session_state['conversation'] = []
 
-question = st.text_input("Ask your Query", placeholder="Ask Omega.....")
+# question = st.text_input("Ask your Query", placeholder="Ask Omega.....")
 
-border_color = "#d0d3d4"
-background_color = " #fdfefe"
 chat_style = """
                     <style>
                     .user-message-container {
@@ -66,7 +64,7 @@ chat_style = """
                                             width: 100%;
                                         }
                     .user-message {
-                                        background-color: #e0f7fa;
+                                        background-color:  #fdfefe;
                                         padding: 10px;
                                         border-radius: 15px;
                                         color: #00796b;
@@ -79,10 +77,46 @@ chat_style = """
                                     }
                     </style>
                     """
+col1, col2 = st.columns([10, 1])  # Adjust ratios as needed
+
+with col2:
+    button_clicked = st.button("Ask", key="ask_button")
+
+with col1:
+    question = st.text_input("", key="input", placeholder="Ask Omega.....")
+# 
+st.markdown("""
+<style>
+.stButton > button {
+    font-size: 36px; /* Increase font size of the button */
+    width: 100%; /* Full width of its column */
+    height: 40px; /* Set height to match the input field */
+    margin: 27px 0 0 0; /* Top margin of 27px, other margins are 0 */    border-radius: 10px; /* Optional: add border-radius for aesthetics */
+    background-color:  #FF5733 ;  /* Optional: change button background color */
+    color: white;  /* Optional: change button text color */
+    cursor: pointer;  /* Change cursor on hover for button */
+}
+
+.stButton > button:hover {
+    background-color:  #bf360c ;  /* Change color on hover */
+    color: white;
+}
+
+.stTextInput > div > div > input {
+    width: 100%; /* Full width of its column */
+    height: 40px; /* Set height to match the button */
+    margin: 0; /* Ensure no extra margin */
+    vertical-align: middle; /* Aligns vertically */
+
+}
+</style>
+""", unsafe_allow_html=True)
+    # padding-left: 10px; /* Optional: add padding for better spacing */
+    # border: none;  /* Optional: remove button border */
+
 
 if question:
     st.markdown(f"<div class='user-message-container'><div class='user-message'><strong>User:</strong> {question}</div></div>", unsafe_allow_html=True)
-    print("working")
     # st.markdown(html_content, unsafe_allow_html=True)
     st.session_state.retriever = db2.as_retriever()
     st.session_state.retriever.search_kwargs['distance_metric'] = 'cos'
@@ -105,12 +139,9 @@ if question:
         chain_type_kwargs={"prompt": QA_CHAIN_PROMPT},
     )
     reply = qa_chain({"query": question} )
-    st.write("Everything is fine")
     st.session_state.conversation.append([question , reply["result"]])
     # st.session_state.conversation.append()
     display_output_in_steamlit(reply["result"], delay=0.05)
-    st.write("Everything is fine 2")
-
 
 
 st.markdown(chat_style, unsafe_allow_html=True)
@@ -119,7 +150,7 @@ st.markdown(chat_style, unsafe_allow_html=True)
 st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
 # st.write(st.session_state.conversation)
 for user_message, bot_message in st.session_state.conversation[0:-1][::-1]:
-        st.markdown(f"<div class='user-message-container'><div class='user-message'><strong>User:</strong> {user_message}</div></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='user-message-container'><div class='user-message'>{user_message}</div></div>", unsafe_allow_html=True)
         st.markdown(bot_message)
     # else:
     #     st.markdown(f"<div class='bot-message-container'><div class='bot-message'><strong>Bot:</strong> {message}</div></div>", unsafe_allow_html=True)
