@@ -120,14 +120,21 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-
-if not os.path.exists("chat_IDs.json"):
-     with open("chat_IDs.json", "w") as file:
-        json.dump({"details": []}, file, indent = 4)
-
+if "chat_IDs" not in st.session_state:
+    st.session_state["chat_IDs"] = False
+if not st.session_state["chat_IDs"]:
+    if not os.path.exists("chat_IDs.json"):
+        with open("chat_IDs.json", "w") as file:
+            json.dump({"details": []}, file, indent = 4)
+    else:
+        unique_id1 = uuid.uuid1()
+        with open("chat_IDs.json", 'r') as file:
+            id = json.load(file)
+        id["details"].append({st.session_state['query']: str(unique_id1)})
+        with open("chat_IDs.json", "w") as file:
+                json.dump(id, file, indent = 4)
 if st.session_state['query']:
     st.markdown(f"<div class='user-message-container'><div class='user-message'><strong>{st.session_state['query']}</strong></div></div>", unsafe_allow_html=True)
-    # st.markdown(html_content, unsafe_allow_html=True)
     st.session_state.retriever = db2.as_retriever()
     st.session_state.retriever.search_kwargs['distance_metric'] = 'cos'
     st.session_state.retriever.search_kwargs['fetch_k'] = 100
@@ -161,4 +168,8 @@ for user_message, bot_message in st.session_state.conversation[0:-1][::-1]:
     # else:
     #     st.markdown(f"<div class='bot-message-container'><div class='bot-message'><strong>Bot:</strong> {message}</div></div>", unsafe_allow_html=True)
 st.markdown("</div>", unsafe_allow_html=True)
-st.session_state.update(query="")
+try:
+    with open(f"memory/{unique_id1}.json", "w") as file:
+            json.dump(st.session_state.conversation, file, indent = 4)
+except:
+    st.session_state.update(query="")
