@@ -16,6 +16,14 @@ import json
 import time
 
 
+def text_bar_cleaner():
+    if 'input' not in st.session_state:
+        st.session_state['input'] = ""
+    if 'query' not in st.session_state:
+        st.session_state['query'] = ""
+    st.session_state["query"] = st.session_state["input"]
+    st.session_state.update(input="")
+
 def display_output_in_steamlit(text, delay=1):
     """
     Display the given text in markdown format with a specified delay,
@@ -53,8 +61,8 @@ model2 = ChatGroq( model_name="Llama3-70b-8192")#Mixtral-8x7b-32768
 
 if 'conversation' not in st.session_state:
     st.session_state['conversation'] = []
-
-# question = st.text_input("Ask your Query", placeholder="Ask Omega.....")
+if 'query' not in st.session_state:
+        st.session_state['query'] = ""
 
 chat_style = """
                     <style>
@@ -83,8 +91,8 @@ with col2:
     button_clicked = st.button("Ask", key="ask_button")
 
 with col1:
-    question = st.text_input("", key="input", placeholder="Ask Omega.....")
-# 
+    st.text_input("", key="input", placeholder="Ask Omega.....",on_change=text_bar_cleaner)
+
 st.markdown("""
 <style>
 .stButton > button {
@@ -111,20 +119,20 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
-    # padding-left: 10px; /* Optional: add padding for better spacing */
-    # border: none;  /* Optional: remove button border */
 
 
-if question:
-    st.markdown(f"<div class='user-message-container'><div class='user-message'><strong>User:</strong> {question}</div></div>", unsafe_allow_html=True)
+if not os.path.exists("chat_IDs.json"):
+     with open("chat_IDs.json", "w") as file:
+        json.dump({"details": []}, file, indent = 4)
+
+if st.session_state['query']:
+    st.markdown(f"<div class='user-message-container'><div class='user-message'><strong>{st.session_state['query']}</strong></div></div>", unsafe_allow_html=True)
     # st.markdown(html_content, unsafe_allow_html=True)
     st.session_state.retriever = db2.as_retriever()
     st.session_state.retriever.search_kwargs['distance_metric'] = 'cos'
     st.session_state.retriever.search_kwargs['fetch_k'] = 100
     # retriever.search_kwargs['maximal_marginal_relevance'] = True
     st.session_state.retriever.search_kwargs['k'] = 20
-    with open("chat_IDs.json", "w") as file:
-        json.dump({"details": []}, file, indent = 4)
     memory = ConversationBufferMemory(
         llm=model2,
         memory_key="chat_history",
@@ -138,9 +146,8 @@ if question:
         return_source_documents=True,
         chain_type_kwargs={"prompt": QA_CHAIN_PROMPT},
     )
-    reply = qa_chain({"query": question} )
-    st.session_state.conversation.append([question , reply["result"]])
-    # st.session_state.conversation.append()
+    reply = qa_chain({"query": st.session_state['query']} )
+    st.session_state.conversation.append([st.session_state['query'] , reply["result"]])
     display_output_in_steamlit(reply["result"], delay=0.05)
 
 
@@ -148,10 +155,10 @@ st.markdown(chat_style, unsafe_allow_html=True)
 
 # Display the conversation history with flexbox and custom styles
 st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
-# st.write(st.session_state.conversation)
 for user_message, bot_message in st.session_state.conversation[0:-1][::-1]:
-        st.markdown(f"<div class='user-message-container'><div class='user-message'>{user_message}</div></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='user-message-container'><div class='user-message'><strong>{user_message}</strong></div></div>", unsafe_allow_html=True)
         st.markdown(bot_message)
     # else:
     #     st.markdown(f"<div class='bot-message-container'><div class='bot-message'><strong>Bot:</strong> {message}</div></div>", unsafe_allow_html=True)
 st.markdown("</div>", unsafe_allow_html=True)
+st.session_state.update(query="")
