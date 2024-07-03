@@ -122,15 +122,18 @@ st.markdown("""
 
 if "chat_IDs" not in st.session_state:
     st.session_state["chat_IDs"] = False
+if "unique_id" not in st.session_state:
+    st.session_state["unique_id"] = None
 if not st.session_state["chat_IDs"]:
     if not os.path.exists("chat_IDs.json"):
         with open("chat_IDs.json", "w") as file:
             json.dump({"details": []}, file, indent = 4)
     else:
-        unique_id1 = uuid.uuid1()
+        st.session_state["chat_IDs"] = True
+        st.session_state["unique_id"] = uuid.uuid1()
         with open("chat_IDs.json", 'r') as file:
             id = json.load(file)
-        id["details"].append({st.session_state['query']: str(unique_id1)})
+        id["details"].append({st.session_state['query']: str(st.session_state["unique_id"])})
         with open("chat_IDs.json", "w") as file:
                 json.dump(id, file, indent = 4)
 if st.session_state['query']:
@@ -159,17 +162,17 @@ if st.session_state['query']:
 
 
 st.markdown(chat_style, unsafe_allow_html=True)
-
+if st.session_state["unique_id"] is not None:
+    unique_id = st.session_state["unique_id"]
+    with open(f"memory/{unique_id}.json", "w") as file:
+            json.dump(st.session_state.conversation, file, indent = 4)
+else:
+     pass
 # Display the conversation history with flexbox and custom styles
 st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
 for user_message, bot_message in st.session_state.conversation[0:-1][::-1]:
         st.markdown(f"<div class='user-message-container'><div class='user-message'><strong>{user_message}</strong></div></div>", unsafe_allow_html=True)
         st.markdown(bot_message)
-    # else:
-    #     st.markdown(f"<div class='bot-message-container'><div class='bot-message'><strong>Bot:</strong> {message}</div></div>", unsafe_allow_html=True)
 st.markdown("</div>", unsafe_allow_html=True)
-try:
-    with open(f"memory/{unique_id1}.json", "w") as file:
-            json.dump(st.session_state.conversation, file, indent = 4)
-except:
-    st.session_state.update(query="")
+
+st.session_state.update(query="")
