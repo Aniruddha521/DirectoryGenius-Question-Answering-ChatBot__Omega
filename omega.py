@@ -41,6 +41,46 @@ def display_output_in_steamlit(text, delay=1):
         time.sleep(delay)
         st.empty()
 
+def inject_non_responsive_css():
+    css = """
+    <style>
+    /* Set a fixed width for the sidebar */
+    .sidebar .sidebar-content {
+        width: 250px;  /* Fixed width */
+        position: fixed;  /* Fix the sidebar position */
+        overflow: hidden;  /* Hide overflow */
+    }
+    
+    /* Adjust the body to account for the fixed sidebar */
+    .main .block-container {
+        margin-left: 260px;  /* Adjust left margin to match sidebar width */
+    }
+    
+    /* Style for chat history content */
+    .sidebar .chat-history {
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 10px;
+        white-space: nowrap;  /* Prevent text wrapping */
+        text-overflow: ellipsis;  /* Clip overflowed text */
+    }
+    </style>
+    """
+    st.markdown(css, unsafe_allow_html=True)
+
+def display_chat_history():
+    chat_html = '<div style="max-height: 400px; overflow-y: auto;">'
+    st.sidebar.header("Chat History")
+    with open("chat_IDs.json", 'r') as file:
+        id = json.load(file)
+    for entry in id["details"]:
+        display = chat_html + str(list(entry.keys())[0]) + '</div>'
+        st.sidebar.markdown(display, unsafe_allow_html=True)
+
+
+# Call the function to inject the CSS
+# inject_non_responsive_css()
+
 folder_path = "/home/roy/Langchain/langchain"
 databasename = folder_path.split("/")[-1]
 set_API(name="chatgroq", platform="c")
@@ -174,5 +214,5 @@ for user_message, bot_message in st.session_state.conversation[0:-1][::-1]:
         st.markdown(f"<div class='user-message-container'><div class='user-message'><strong>{user_message}</strong></div></div>", unsafe_allow_html=True)
         st.markdown(bot_message)
 st.markdown("</div>", unsafe_allow_html=True)
-
+display_chat_history()
 st.session_state.update(query="")
