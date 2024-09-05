@@ -1,5 +1,7 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter, Language
 from langchain.document_loaders import TextLoader, BSHTMLLoader, UnstructuredMarkdownLoader, CSVLoader, PyPDFLoader
+# from PyPDF2 import PdfReader, PdfFileWriter, PageObject
+
 from custom_loader import ipynb_to_mardown
 from collections import Counter
 
@@ -54,7 +56,8 @@ Default_File_Splitters = {
     "html": html_splitter,
     "tex": latex_splitter,
     "rst": rst_splitter,
-    "proto": proto_splitter
+    "proto": proto_splitter,
+    "pdf": _default_text_splitter
 }
 
 Default_File_Loaders = {
@@ -77,5 +80,6 @@ Default_File_Loaders = {
     "html": HTML_Loader,
     "tex": text_loader,
     "rst": text_loader,
-    "proto": text_loader
+    "proto": text_loader,
+    "pdf" : pdf_loader
 }

@@ -1,0 +1,96 @@
+<html>
+<head>
+    <title>ChatGPT Interface</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1e1e1e;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const App = () => {
+            return (
+                <div className="flex h-screen">
+                    <div className="w-1/4 bg-gray-900 p-4">
+                        <div className="flex items-center mb-6">
+                            <i className="fas fa-bars text-xl mr-4"></i>
+                            <h1 className="text-xl font-semibold">ChatGPT</h1>
+                        </div>
+                        <div className="mb-6">
+                            <div className="flex items-center mb-4">
+                                <i className="fas fa-robot text-xl mr-4"></i>
+                                <span>ChatGPT</span>
+                            </div>
+                            <div className="flex items-center mb-4">
+                                <i className="fas fa-b text-xl mr-4"></i>
+                                <span>BypassGPT: Bypass AI ...</span>
+                            </div>
+                            <div className="flex items-center mb-4">
+                                <i className="fas fa-th-large text-xl mr-4"></i>
+                                <span>Explore GPTs</span>
+                            </div>
+                        </div>
+                        <div className="mb-6">
+                            <h2 className="text-sm text-gray-400 mb-2">Today</h2>
+                            <div className="mb-2">Add Button in Sidebar</div>
+                            <div className="mb-2">Directory Content Summary</div>
+                        </div>
+                        <div className="mb-6">
+                            <h2 className="text-sm text-gray-400 mb-2">Yesterday</h2>
+                            <div className="mb-2">Deconvolution as Upsampling Layer</div>
+                            <div className="mb-2">Deconvolution and Upsampling Sig...</div>
+                        </div>
+                        <div className="mb-6">
+                            <h2 className="text-sm text-gray-400 mb-2">Previous 7 Days</h2>
+                            <div className="mb-2">Prime Number Check C++</div>
+                            <div className="mb-2">YOLO Model Input Requirements</div>
+                        </div>
+                        <div>
+                            <h2 className="text-sm text-gray-400 mb-2">Previous 30 Days</h2>
+                            <div className="mb-2">Upgrade plan</div>
+                        </div>
+                    </div>
+                    <div className="w-3/4 bg-gray-800 p-4 flex flex-col items-center justify-center">
+                        <div className="mb-8">
+                            <i className="fas fa-robot text-6xl"></i>
+                        </div>
+                        <div className="flex space-x-4">
+                            <div className="bg-gray-700 p-4 rounded-lg flex flex-col items-center">
+                                <i className="fas fa-image text-xl mb-2"></i>
+                                <span>Create an image for my presentation</span>
+                            </div>
+                            <div className="bg-gray-700 p-4 rounded-lg flex flex-col items-center">
+                                <i className="fas fa-graduation-cap text-xl mb-2"></i>
+                                <span>Explain nostalgia to a kindergartener</span>
+                            </div>
+                            <div className="bg-gray-700 p-4 rounded-lg flex flex-col items-center">
+                                <i className="fas fa-comment-dots text-xl mb-2"></i>
+                                <span>Message to comfort a friend</span>
+                            </div>
+                            <div className="bg-gray-700 p-4 rounded-lg flex flex-col items-center">
+                                <i className="fas fa-tshirt text-xl mb-2"></i>
+                                <span>Pick outfit to look good on camera</span>
+                            </div>
+                        </div>
+                        <div className="absolute bottom-0 w-full p-4 bg-gray-900 flex items-center">
+                            <i className="fas fa-paperclip text-xl mr-4"></i>
+                            <input type="text" placeholder="Message ChatGPT" className="w-full bg-gray-700 p-2 rounded-lg text-white" />
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

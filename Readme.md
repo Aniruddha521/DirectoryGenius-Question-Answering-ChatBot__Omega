@@ -1,0 +1,2 @@
+# Directory Genius Assistant
+Struggling to comprehend the contents of a directory filled with files in various formats, and have limited time to thoroughly read and understand each one! No problem this repo presents you your personal assistant which uses **Large Language Models(LLMs)** and **Retrival Argumentation Generation(RAG)** techniques to answer your queries.

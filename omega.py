@@ -11,6 +11,8 @@ from tools import retrival_question_answering
 import streamlit as st
 from utilities import *
 from prompts import *
+from tkinter import Tk
+from tkinter.filedialog import askdirectory
 import uuid
 import json
 import time
@@ -58,14 +60,22 @@ def inject_non_responsive_css():
     
     /* Style for chat history content */
     .sidebar .chat-history {
-        max-height: 400px;
+        max-height: 200px;
+        overflow-y: auto;
+        padding: 10px;
+        white-space: nowrap;  /* Prevent text wrapping */
+        text-overflow: ellipsis;  /* Clip overflowed text */
+    }
+
+    .sidebar .Database {
+        max-height: 200px;
         overflow-y: auto;
         padding: 10px;
         white-space: nowrap;  /* Prevent text wrapping */
         text-overflow: ellipsis;  /* Clip overflowed text */
     }
     </style>
-    """
+    """,
     st.markdown(css, unsafe_allow_html=True)
 
 def display_chat_history():
@@ -76,7 +86,27 @@ def display_chat_history():
     for entry in id["details"]:
         display = chat_html + str(list(entry.keys())[0]) + '</div>'
         st.sidebar.markdown(display, unsafe_allow_html=True)
-
+        
+def direction_selection():
+    # Hide the main tkinter window
+    root = Tk()
+    root.withdraw()
+    
+    if st.sidebar.button("Set Directory"):
+        # Open file dialog to select directory
+        selected_directory = askdirectory()
+        
+        if selected_directory:
+            st.session_state["selected_directory"] = selected_directory
+            st.sidebar.success(f"Directory set to: {selected_directory}")
+        else:
+            st.sidebar.error("No directory selected. Please select a valid directory.")
+    
+    # Display the current selected directory
+    if "selected_directory" in st.session_state:
+        st.sidebar.write(f"Current Directory: {st.session_state['selected_directory']}")
+    else:
+        st.sidebar.write("No directory selected.")
 
 # Call the function to inject the CSS
 # inject_non_responsive_css()
@@ -91,7 +121,7 @@ cache_folder_name = "cache/mpnet-base-v2"
 embeddings = HuggingFaceEmbeddings(model_name=embedd_model, cache_folder=cache_folder_name)
 dict_ignore_files = {
     "dir": [".github", ".git", ".devcontainer", "docs", "examples", "sample_documents"],
-    "extension": ["faiss", "pdf", "cff","png", "jpg", "gif", "yaml", "cff", "Dockerfile", "lock", "toml", "odt", "gitmodules", "csv", "example", "ambr", "html", "typed", "xml", "yml", "avi"],
+    "extension": ["faiss", "pdf", "cff","png", "jpg", "gif", "yaml", "Dockerfile", "lock", "toml", "odt", "gitmodules", "csv", "example", "ambr", "html", "typed", "xml", "yml", "avi"],
     "file": [".gitignore", ".dockerignore", ".flake8", ".gitattributes", "Dockerfile", "LICENSE", "Makefile"]
 }
 db2 = DeepLake(dataset_path=f"Database/{databasename}-{cache_folder_name}", read_only=True, embedding_function=embeddings)
@@ -208,11 +238,12 @@ if st.session_state["unique_id"] is not None:
             json.dump(st.session_state.conversation, file, indent = 4)
 else:
      pass
-# Display the conversation history with flexbox and custom styles
 st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
 for user_message, bot_message in st.session_state.conversation[0:-1][::-1]:
         st.markdown(f"<div class='user-message-container'><div class='user-message'><strong>{user_message}</strong></div></div>", unsafe_allow_html=True)
         st.markdown(bot_message)
 st.markdown("</div>", unsafe_allow_html=True)
+direction_selection()
 display_chat_history()
+
 st.session_state.update(query="")
