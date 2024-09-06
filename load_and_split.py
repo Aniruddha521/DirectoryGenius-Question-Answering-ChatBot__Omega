@@ -57,7 +57,6 @@ Default_File_Splitters = {
     "tex": latex_splitter,
     "rst": rst_splitter,
     "proto": proto_splitter,
-    "pdf": _default_text_splitter
 }
 
 Default_File_Loaders = {
